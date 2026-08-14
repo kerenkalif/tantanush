@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>מסע הבוסים - Boss Rush</title>
-<link rel="icon" type="image/png" href="favicon.png">
+<link rel="icon" type="image/png" href="images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -316,7 +316,7 @@
   const levelTag = document.getElementById('level-tag');
 
   // ---------- Config ----------
-  const TOTAL_BOSSES = 20;
+  const TOTAL_BOSSES = 30;
   const BOSS_THEMES = [
     {name:'זומבי הביצה', body:'#4f7d3c', accent:'#2e4d22'},
     {name:'שלד המערה', body:'#cfcfc2', accent:'#8f8f86'},
@@ -337,7 +337,17 @@
     {name:'ורדן', body:'#2e6b7a', accent:'#0a1a1e'},
     {name:'מכשף האוויקר', body:'#3a2e5a', accent:'#7a5ab0'},
     {name:'נוקם הגרזן', body:'#3a3a4a', accent:'#1a1a2a'},
-    {name:'הוויתר', body:'#141414', accent:'#3fae3f'}
+    {name:'הוויתר', body:'#141414', accent:'#3fae3f'},
+    {name:'חוסק המדבר', body:'#c9b896', accent:'#8a7a5a'},
+    {name:'טבוע הים', body:'#2e6b5a', accent:'#1a3d33'},
+    {name:'מכשפת הרעל', body:'#3a2e5a', accent:'#6bd66b'},
+    {name:'גאסט הנד', body:'#e8e8e8', accent:'#c0392b'},
+    {name:'מלך הלבה', body:'#d35400', accent:'#7a2d00'},
+    {name:'נחשי הכסף', body:'#8a8a9a', accent:'#5a5a6a'},
+    {name:'להקת הוקס', body:'#4a6b9c', accent:'#2e3d5a'},
+    {name:'האשלייה', body:'#5a3a7a', accent:'#2e1a4a'},
+    {name:'זוגלין הפרוע', body:'#c9c9c9', accent:'#7a3a3a'},
+    {name:'מלך הצללים האחרון', body:'#0d0d1a', accent:'#ff2d55'}
   ];
 
   const PLAYER_SPEED = 3.2;
@@ -454,10 +464,26 @@
       pants:'#0d9c5c', shoes:'#4a3728', eyes:'#1a1a1a',
       attackDamage: 2, // 1 heart per hit
       maxHearts: 10
+    },
+    ironGolem: {
+      key:'ironGolem', name:'איירון גולם', unlock:500, rarity:'rare',
+      hair:'#9a9a9a', skin:'#d4d4d4', shirt:'#a8a8a8',
+      shirtDetail:'#8b4513', waist:'#7a7a7a', cuffs:'#a8a8a8',
+      pants:'#6a6a6a', shoes:'#4a4a4a', eyes:'#1a1a1a',
+      attackDamage: 3, // a heart and a half per hit
+      maxHearts: 15
+    },
+    lily: {
+      key:'lily', name:'לילי', unlock:Infinity, unlockedByBoss: 29, rarity:'legendary',
+      hair:'#c9974a', skin:'#d4a76a', shirt:'#f0e6d2',
+      shirtDetail:'#e63946', waist:'#e63946', cuffs:'#f0e6d2',
+      pants:'#d4a76a', shoes:'#f0e6d2', eyes:'#1a1a1a',
+      attackDamage: 7, // 3.5 hearts per hit - barking
+      maxHearts: 30
     }
   };
   let selectedCharKey = 'tantanush';
-  const unlockedByBossDefeat = { megaTantanush: false, megaMiliak: false };
+  const unlockedByBossDefeat = { megaTantanush: false, megaMiliak: false, lily: false };
   const GIFT_VOUCHER_CODE = 'תאנתאנוש';
   let giftVoucherRedeemed = false;
   const unlockedByLootbox = {};
@@ -499,11 +525,60 @@
       hair:'#4a2f18', skin:'#e0b090', shirt:'#f5d020',
       shirtDetail:'#ffd23f', waist:'#ffd23f', cuffs:'#ffd23f',
       pants:'#14141c', shoes:'#ffd23f', eyes:'#222222'
+    },
+    miliakMechanical: {
+      key:'miliakMechanical', name:'מיליאק המכנית', forChar:'miliak', cost:500,
+      hair:'#ff4fd8', skin:'#c0c0c0', shirt:'#00e5ff',
+      shirtDetail:'#a020f0', waist:'#ff8c00', cuffs:'#ffe135',
+      pants:'#7fff00', shoes:'#ff3b30', eyes:'#ffffff'
+    },
+    megaMiliakMechanical: {
+      key:'megaMiliakMechanical', name:'מגה מיליאק המכנית', forChar:'megaMiliak', cost:750,
+      hair:'#ff4fd8', skin:'#c0c0c0', shirt:'#00e5ff',
+      shirtDetail:'#ffd23f', waist:'#ff8c00', cuffs:'#ffd23f',
+      pants:'#7fff00', shoes:'#ff3b30', eyes:'#ffffff'
+    },
+    tantanushMechanical: {
+      key:'tantanushMechanical', name:'תאנתאנוש המכני', forChar:'tantanush', cost:500,
+      hair:'#39ff14', skin:'#b8b8b8', shirt:'#0080ff',
+      shirtDetail:'#ff1493', waist:'#ff8c00', cuffs:'#ffe135',
+      pants:'#8a2be2', shoes:'#ff3b30', eyes:'#00ffff'
+    },
+    megaTantanushMechanical: {
+      key:'megaTantanushMechanical', name:'מגה תאנתאנוש המכני', forChar:'megaTantanush', cost:750,
+      hair:'#39ff14', skin:'#b8b8b8', shirt:'#0080ff',
+      shirtDetail:'#ffd23f', waist:'#ff8c00', cuffs:'#ffd23f',
+      pants:'#8a2be2', shoes:'#ff3b30', eyes:'#00ffff'
+    },
+    tomtomkiCat: {
+      key:'tomtomkiCat', name:'תומתומקי החתול', forChar:'tomtomki', cost:250,
+      hair:'#ff8c42', skin:'#fff5e1', shirt:'#ffffff',
+      shirtDetail:'#ff8c42', waist:'#ff8c42', cuffs:'#fff5e1',
+      pants:'#ffffff', shoes:'#ffb6c1', eyes:'#32cd32'
+    },
+    emeraldIron: {
+      key:'emeraldIron', name:'אמרלד הברזל', forChar:'emerald', cost:500,
+      hair:'#8a8a8a', skin:'#c8c8c8', shirt:'#9a9a9a',
+      shirtDetail:'#8b4513', waist:'#7a7a7a', cuffs:'#9a9a9a',
+      pants:'#6a6a6a', shoes:'#4a4a4a', eyes:'#1a1a1a'
+    },
+    alexCreeper: {
+      key:'alexCreeper', name:'אלכס הקריפר', forChar:'alex', cost:800,
+      hair:'#5fc95f', skin:'#2e7d2e', shirt:'#4a9c3a',
+      shirtDetail:'#1a2e1a', waist:'#2e4d22', cuffs:'#4a9c3a',
+      pants:'#3a7d2e', shoes:'#1a2e1a', eyes:'#0a0a0a'
+    },
+    miliakBuilder: {
+      key:'miliakBuilder', name:'מיליאק הבנאית', forChar:'miliak', cost:800,
+      hair:'#ffcc00', skin:'#e0b48c', shirt:'#ff6600',
+      shirtDetail:'#ffe135', waist:'#5a3a1a', cuffs:'#8a8a8a',
+      pants:'#3a5a8a', shoes:'#4a2f18', eyes:'#3fae3f'
     }
   };
   const ownedSkins = {}; // skinKey -> true
   const equippedSkin = {}; // charKey -> skinKey or undefined (base look)
   const SKIN_VOUCHER_CODES = { 'מיינינג': 'mrRarHacker' };
+  const CHAR_VOUCHER_CODES = { 'נובית': 'miliak' };
 
   function getActiveSkin(charKey){
     const eq = equippedSkin[charKey];
@@ -551,8 +626,14 @@
       invulnTimer: 0,
       moving:false,
       skin: charDef, // gameplay stats (attackDamage etc.)
-      displaySkin: getActiveSkin(selectedCharKey) // colors only - may be a cosmetic skin
+      displaySkin: getActiveSkin(selectedCharKey), // colors only - may be a cosmetic skin
+      dot: null // active damage-over-time effect: {damage, ticksLeft, interval, timer}
     };
+  }
+
+  function applyDot(damagePerTick, ticks, interval){
+    if(!damagePerTick || !ticks) return;
+    player.dot = { damage: damagePerTick, ticksLeft: ticks, interval, timer: interval };
   }
 
   // Per-boss stats. hitDamage = fallback melee/projectile damage (points; 2 points = 1 heart).
@@ -570,16 +651,26 @@
     /* 7 blaze         */ { maxHp:34, rangedDamage:8, closeDamage:2, chargeMultiplier:1 }, // 17 hearts: far=4 hearts, close=1 heart
     /* 8 guardian      */ { maxHp:16, pulseMode:true, pulseInterval:500, pulseRadius:90, pulseDamage:1 }, // 8 hearts, half heart/0.5s while close
     /* 9 dragon        */ { maxHp:50, rangedDamage:6, closeDamage:0, chargeMultiplier:1, shootInterval:1000, chargeInterval:999999 }, // 25 hearts, fires a visible breath bolt every 1s for 3 hearts
-    /* 10 piglin brute */ { maxHp:44, hitDamage:2, chargeMultiplier:2 }, // 22 hearts
-    /* 11 hoglin       */ { maxHp:48, hitDamage:3, chargeMultiplier:2 }, // 24 hearts, charges hard
-    /* 12 phantom      */ { maxHp:40, pulseMode:true, pulseInterval:1500, pulseRadius:100, pulseDamage:3 }, // 20 hearts, swoops
-    /* 13 shulker      */ { maxHp:46, rangedDamage:4, closeDamage:1, chargeMultiplier:1 }, // 23 hearts, mostly ranged
-    /* 14 ravager      */ { maxHp:56, hitDamage:4, chargeMultiplier:2 }, // 28 hearts, heavy melee
-    /* 15 pillager     */ { maxHp:44, rangedDamage:3, closeDamage:1, chargeMultiplier:1 }, // 22 hearts, crossbow
-    /* 16 warden       */ { maxHp:68, rangedDamage:6, closeDamage:0, chargeMultiplier:1, shootInterval:1200, chargeInterval:999999 }, // 34 hearts, sonic-boom bolt every 1.2s
-    /* 17 evoker       */ { maxHp:52, pulseMode:true, pulseInterval:1300, pulseRadius:110, pulseDamage:4 }, // 26 hearts
-    /* 18 vindicator   */ { maxHp:60, hitDamage:5, chargeMultiplier:2 }, // 30 hearts, axe swings hard
-    /* 19 wither       */ { maxHp:80, rangedDamage:8, closeDamage:0, chargeMultiplier:1, shootInterval:1000, chargeInterval:999999 } // 40 hearts, final boss - fires a skull bolt every 1s for 4 hearts
+    /* 10 piglin brute */ { maxHp:20, pulseMode:true, pulseInterval:500, pulseRadius:100, pulseDamage:8 }, // 10 hearts, close=4 hearts/0.5s
+    /* 11 hoglin       */ { maxHp:24, pulseMode:true, pulseInterval:500, pulseRadius:100, pulseDamage:6 }, // 12 hearts, close=3 hearts/0.5s
+    /* 12 phantom      */ { maxHp:10, pulseMode:true, pulseInterval:250, pulseRadius:100, pulseDamage:10 }, // 5 hearts, close=5 hearts/0.25s - fast & brutal
+    /* 13 shulker      */ { maxHp:30, pulseMode:true, pulseInterval:500, pulseRadius:100, pulseDamage:2 }, // 15 hearts, close=1 heart/0.5s
+    /* 14 ravager      */ { maxHp:40, pulseMode:true, pulseInterval:2000, pulseRadius:100, pulseDamage:8 }, // 20 hearts, close=4 hearts/2s, no ranged attack
+    /* 15 pillager     */ { maxHp:20, pulseMode:true, pulseInterval:1000, pulseRadius:100, pulseDamage:6 }, // 10 hearts, close=3 hearts/1s, no ranged attack
+    /* 16 warden       */ { maxHp:100, rangedDamage:10, closeDamage:0, chargeMultiplier:1, shootInterval:5000, chargeInterval:999999 }, // 50 hearts, sonic-boom bolt every 5s for 5 hearts
+    /* 17 evoker       */ { maxHp:30, rangedDamage:4, closeDamage:0, chargeMultiplier:1, shootInterval:1000, chargeInterval:999999, firstHitImmune:true }, // 15 hearts, no melee, shields the first hit
+    /* 18 vindicator   */ { maxHp:20, pulseMode:true, pulseInterval:500, pulseRadius:100, pulseDamage:8 }, // 10 hearts, close=4 hearts/0.5s
+    /* 19 wither       */ { maxHp:140, rangedDamage:10, closeDamage:0, chargeMultiplier:1, shootInterval:6000, chargeInterval:999999 }, // 70 hearts - fires a skull bolt every 6s for 5 hearts
+    /* 20 husk         */ { maxHp:40, pulseMode:true, pulseInterval:500, pulseRadius:100, pulseDamage:2 }, // 20 hearts, quicksand: 1 heart/0.5s, no ranged
+    /* 21 drowned      */ { maxHp:42, pulseMode:true, pulseInterval:500, pulseRadius:100, pulseDamage:1 }, // 21 hearts, toxic water: half heart/0.5s, no ranged
+    /* 22 witch        */ { maxHp:50, rangedDamage:4, closeDamage:0, chargeMultiplier:1, shootInterval:1000, chargeInterval:999999 }, // 25 hearts, poison potions: 2 hearts/s, no melee
+    /* 23 ghast        */ { maxHp:2, rangedDamage:10, closeDamage:0, chargeMultiplier:1, shootInterval:2500, chargeInterval:999999, projSpeedOverride:3, evasive:true }, // 1 heart! fireball: 5 hearts, slow 1.5s travel, no melee, evasive
+    /* 24 magma king   */ { maxHp:54, pulseMode:true, pulseInterval:4000, pulseRadius:100, pulseDamage:2, dotDamage:2, dotTicks:3, dotInterval:1000 }, // 27 hearts, lava: 1 heart then burns 1 heart/s for 3s
+    /* 25 silverfish   */ { maxHp:60, pulseMode:true, pulseInterval:5000, pulseRadius:100, pulseDamage:6, dotDamage:1, dotTicks:4, dotInterval:1000, evasive:true }, // 30 hearts, venom: 3 hearts then poisons half heart/s for 4s, evasive
+    /* 26 vex swarm    */ { maxHp:60, pulseMode:true, pulseInterval:1000, pulseRadius:150, pulseDamage:4 }, // 30 hearts (3 vexes x 10 hearts, combined), loud music: 2 hearts
+    /* 27 illusioner   */ { maxHp:20, pulseMode:true, pulseInterval:1000, pulseRadius:100, pulseDamage:4, illusion:true }, // 10 hearts, hit: 2 hearts, conjures fake duplicates
+    /* 28 zoglin       */ { maxHp:72, pulseMode:true, pulseInterval:1000, pulseRadius:100, pulseDamage:10 }, // 36 hearts, headbutt: 5 hearts/1s, no ranged
+    /* 29 shadow king  */ { maxHp:140, pulseMode:true, pulseInterval:4000, pulseRadius:99999, mirrorPlayerDamage:true } // 70 hearts, summons a shadow that hits for your own character's damage
   ];
 
   function bossStatsForLevel(i){
@@ -590,6 +681,7 @@
       shootInterval: custom.shootInterval != null ? custom.shootInterval : Math.max(2600 - i*180, 1100),
       chargeInterval: custom.chargeInterval != null ? custom.chargeInterval : Math.max(3400 - i*160, 1600),
       projSpeed: 3 + i*0.25,
+      projSpeedOverride: custom.projSpeedOverride,
       hitDamage: custom.hitDamage != null ? custom.hitDamage : 1,
       rangedDamage: custom.rangedDamage, // undefined => falls back to hitDamage
       closeDamage: custom.closeDamage,   // undefined => falls back to hitDamage
@@ -597,7 +689,14 @@
       pulseMode: !!custom.pulseMode,
       pulseInterval: custom.pulseInterval || 2000,
       pulseRadius: custom.pulseRadius != null ? custom.pulseRadius : 95,
-      pulseDamage: custom.pulseDamage != null ? custom.pulseDamage : 6
+      pulseDamage: custom.pulseDamage != null ? custom.pulseDamage : 6,
+      firstHitImmune: !!custom.firstHitImmune,
+      evasive: !!custom.evasive,
+      illusion: !!custom.illusion,
+      mirrorPlayerDamage: !!custom.mirrorPlayerDamage,
+      dotDamage: custom.dotDamage,
+      dotTicks: custom.dotTicks,
+      dotInterval: custom.dotInterval
     };
   }
 
@@ -1078,6 +1177,10 @@
       unlockedByBossDefeat.megaMiliak = true;
       unlockMsg += '<p class="sub">🌟 פתחת דמות חדשה: ' + CHARACTERS.megaMiliak.name + '!</p>';
     }
+    if(bossIndex === 29 && !unlockedByBossDefeat.lily){
+      unlockedByBossDefeat.lily = true;
+      unlockMsg += '<p class="sub">🌟 פתחת דמות חדשה: ' + CHARACTERS.lily.name + '!</p>';
+    }
 
     let dotsHtml = '<div class="boss-track">';
     for(let i=0;i<TOTAL_BOSSES;i++){
@@ -1194,12 +1297,18 @@
       const ay = player.y + (player.facing==='up'?-ATTACK_RANGE:player.facing==='down'?ATTACK_RANGE:0);
       const d = dist(ax,ay, boss.x, boss.y);
       if(d < ATTACK_RANGE + Math.max(boss.w,boss.h)/2){
-        boss.hp -= (player.skin.attackDamage || 1);
-        boss.hitFlash = 150;
-        updateBossBar();
-        spawnParticles(boss.x, boss.y, boss.theme.accent);
-        if(boss.hp <= 0){
-          onBossDefeated();
+        if(boss.firstHitImmune && !boss._shieldUsed){
+          boss._shieldUsed = true;
+          boss.hitFlash = 150;
+          spawnParticles(boss.x, boss.y, '#ffffff');
+        } else {
+          boss.hp -= (player.skin.attackDamage || 1);
+          boss.hitFlash = 150;
+          updateBossBar();
+          spawnParticles(boss.x, boss.y, boss.theme.accent);
+          if(boss.hp <= 0){
+            onBossDefeated();
+          }
         }
       }
       player._hitApplied = true;
@@ -1210,14 +1319,30 @@
     if(boss.hitFlash>0) boss.hitFlash -= dt;
 
     if(boss.pulseMode){
-      // creeper: always creeps toward the player, no projectiles, no charge -
+      // creeper-style: creeps toward (or evades, if boss.evasive) the player, no projectiles, no charge -
       // just a periodic pulse that only hurts if the player is close when it fires.
       const bd = dist(boss.x,boss.y, player.x, player.y);
-      const dirx = (player.x-boss.x)/(bd||1), diry=(player.y-boss.y)/(bd||1);
+      let dirx = (player.x-boss.x)/(bd||1), diry=(player.y-boss.y)/(bd||1);
+      if(boss.evasive){
+        // keep a preferred distance: flee if too close, drift closer if too far, else orbit
+        const preferred = 220;
+        if(bd < preferred){ dirx = -dirx; diry = -diry; }
+        else if(bd < preferred + 40){ dirx = -diry*0.6; diry = dirx*0.6; } // orbit sideways
+      }
       boss.x += dirx*boss.speed;
       boss.y += diry*boss.speed;
       boss.y = clamp(boss.y, 90, H*0.55);
       boss.x = clamp(boss.x, 60, W-60);
+
+      // illusion bosses briefly flash duplicate ghost copies of themselves
+      if(boss.illusion){
+        boss.illusionTimer = (boss.illusionTimer||2000) - dt;
+        if(boss.illusionTimer <= 0){
+          boss.illusionTimer = 2200;
+          boss.illusionActiveFor = 700;
+        }
+        if(boss.illusionActiveFor > 0) boss.illusionActiveFor -= dt;
+      }
 
       boss.pulseTimer -= dt;
       if(boss.pulseTimer <= 0){
@@ -1225,13 +1350,21 @@
         boss.hitFlash = 250;
         spawnParticles(boss.x, boss.y, boss.theme.accent);
         const pd = dist(boss.x,boss.y, player.x, player.y);
-        if(pd < boss.pulseRadius && player.invulnTimer<=0){
-          damagePlayer(boss.pulseDamage);
+        const inRange = boss.mirrorPlayerDamage ? true : (pd < boss.pulseRadius);
+        if(inRange && player.invulnTimer<=0){
+          const dmg = boss.mirrorPlayerDamage ? (player.skin.attackDamage || 1) : boss.pulseDamage;
+          damagePlayer(dmg);
+          if(boss.dotDamage) applyDot(boss.dotDamage, boss.dotTicks, boss.dotInterval);
         }
       }
     } else if(!boss.charging){
       const bd = dist(boss.x,boss.y, player.x, player.y);
-      const dirx = (player.x-boss.x)/(bd||1), diry=(player.y-boss.y)/(bd||1);
+      let dirx = (player.x-boss.x)/(bd||1), diry=(player.y-boss.y)/(bd||1);
+      if(boss.evasive){
+        const preferred = 260;
+        if(bd < preferred){ dirx = -dirx; diry = -diry; }
+        else if(bd < preferred + 40){ dirx = -diry*0.6; diry = dirx*0.6; }
+      }
       boss.x += dirx*boss.speed;
       boss.y += diry*boss.speed;
       boss.y = clamp(boss.y, 90, H*0.55);
@@ -1241,11 +1374,13 @@
       if(boss.shootTimer <= 0){
         boss.shootTimer = boss.shootInterval;
         const bd2 = dist(boss.x,boss.y, player.x, player.y)||1;
+        const pSpeed = boss.projSpeedOverride != null ? boss.projSpeedOverride : boss.projSpeed;
         projectiles.push({
           x:boss.x, y:boss.y,
-          vx:(player.x-boss.x)/bd2*boss.projSpeed,
-          vy:(player.y-boss.y)/bd2*boss.projSpeed,
-          r:8
+          vx:(player.x-boss.x)/bd2*pSpeed,
+          vy:(player.y-boss.y)/bd2*pSpeed,
+          r:8,
+          dotDamage: boss.dotDamage, dotTicks: boss.dotTicks, dotInterval: boss.dotInterval
         });
       }
 
@@ -1281,6 +1416,7 @@
       if(dist(p.x,p.y,player.x,player.y) < p.r + 14 && player.invulnTimer<=0){
         const rangedDmg = (boss.rangedDamage != null) ? boss.rangedDamage : (boss.hitDamage || 1);
         damagePlayer(rangedDmg);
+        if(p.dotDamage) applyDot(p.dotDamage, p.dotTicks, p.dotInterval);
         projectiles.splice(i,1);
       }
     }
@@ -1292,6 +1428,17 @@
         const base = (boss.closeDamage != null) ? boss.closeDamage : (boss.hitDamage || 1);
         const mult = boss.chargeMultiplier || 2;
         damagePlayer(boss.charging ? base*mult : base);
+      }
+    }
+
+    // damage-over-time ticking on the player (poison/burn effects, independent of position)
+    if(player.dot){
+      player.dot.timer -= dt;
+      if(player.dot.timer <= 0){
+        damagePlayer(player.dot.damage);
+        player.dot.ticksLeft -= 1;
+        if(player.dot.ticksLeft <= 0){ player.dot = null; }
+        else { player.dot.timer = player.dot.interval; }
       }
     }
 
@@ -1434,6 +1581,16 @@
 
   function drawBoss(){
     const {x,y,w,h,theme,hitFlash,charging,chargeWindup} = boss;
+
+    // illusion duplicates: a couple of translucent ghost copies nearby
+    if(boss.illusion && boss.illusionActiveFor > 0){
+      ctx.globalAlpha = 0.35;
+      ctx.fillStyle = theme.body;
+      ctx.fillRect(x-w/2-70, y-h/2-20, w, h);
+      ctx.fillRect(x-w/2+70, y-h/2+15, w, h);
+      ctx.globalAlpha = 1;
+    }
+
     ctx.fillStyle = 'rgba(0,0,0,0.3)';
     ctx.beginPath();
     ctx.ellipse(x, y+h/2+6, w/2.2, 10, 0,0,Math.PI*2);
@@ -1491,6 +1648,18 @@
     if(code === null) return;
     const trimmed = code.trim();
 
+    const charKey = CHAR_VOUCHER_CODES[trimmed];
+    if(charKey){
+      if(isCharUnlocked(CHARACTERS[charKey])){
+        alert('כבר פתחת את הדמות הזו.');
+        return;
+      }
+      unlockedByLootbox[charKey] = true;
+      alert('🎁 השובר מומש! פתחת את ' + CHARACTERS[charKey].name + '!');
+      if(document.getElementById('char-container')) renderCharacterCards();
+      return;
+    }
+
     const skinKey = SKIN_VOUCHER_CODES[trimmed];
     if(skinKey){
       if(ownedSkins[skinKey]){
@@ -1501,7 +1670,7 @@
       const sk = SKINS[skinKey];
       equippedSkin[sk.forChar] = sk.key;
       alert('🎁 השובר מומש! קיבלת את הסקין: ' + sk.name + '!');
-      if(document.getElementById('char-row')) renderCharacterCards();
+      if(document.getElementById('char-container')) renderCharacterCards();
       if(document.getElementById('skins-row')) renderSkinCards();
       if(player && selectedCharKey === sk.forChar) player.displaySkin = getActiveSkin(selectedCharKey);
       return;
@@ -1518,7 +1687,7 @@
     giftVoucherRedeemed = true;
     const resultText = rollLootBox();
     alert('🎁 השובר מומש! קיבלת תיבת שלל חינם:\n\n' + resultText);
-    if(document.getElementById('char-row')) renderCharacterCards();
+    if(document.getElementById('char-container')) renderCharacterCards();
     updateHomeTrophyDisplay();
   });
 
